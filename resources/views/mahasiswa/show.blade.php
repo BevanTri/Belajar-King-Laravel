@@ -17,12 +17,12 @@
         <h2>Informasi</h2>
         <p><span class="info-label">NIM:</span> {{ $mahasiswa->nim }}</p>
         <p><span class="info-label">IPK:</span> {{ number_format($mahasiswa->ipk, 2) }}</p>
-        <p><span class="info-label">Email:</span> {{ $mahasiswa->email }}</p>
-        <p><span class="info-label">GitHub:</span> <a href="{{ $mahasiswa->github }}">{{ $mahasiswa->github }}</a></p>
-        <p style="margin-top:12px;">{{ $mahasiswa->bio }}</p>
+        <p><span class="info-label">Email:</span> {{ $mahasiswa->email ?? '-' }}</p>
+        <p><span class="info-label">GitHub:</span> <a href="{{ $mahasiswa->github }}">{{ $mahasiswa->github ?? '-' }}</a></p>
+        <p style="margin-top:12px;">{{ $mahasiswa->bio ?? '-' }}</p>
     </div>
 
     <div style="text-align:center;margin-top:16px;">
-        <a href="{{ route('profil') }}" style="color:#065A82;">&larr; Kembali ke daftar mahasiswa</a>
+        <a href="{{ route('mahasiswa.index') }}" style="color:#065A82;">&larr; Kembali ke daftar</a>
     </div>
 @endsection

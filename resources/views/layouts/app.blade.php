@@ -50,6 +50,9 @@
         body.dark #fakta { background: linear-gradient(135deg, #0a1628, #1a2a3e); }
         body.dark #btnRefresh { background: #1a1a2e; color: #88c0d0; border: 1px solid #88c0d0; }
 
+        body.dark input, body.dark textarea { background: #1a1a2e; color: #e0e0e0; border-color: #2a2a4a; }
+        body.dark input:focus, body.dark textarea:focus { outline-color: #88c0d0; }
+
         @media (max-width: 480px) {
             .navbar { flex-direction: column; text-align: center; }
             .nav-links { flex-direction: column; width: 100%; }
@@ -62,13 +65,18 @@
     <nav class="navbar">
         <span>Pemrograman Web – UNTIRTA</span>
         <div class="nav-links">
-            <a href="{{ route('profil') }}">Profil Saya</a>
+            <a href="{{ route('mahasiswa.index') }}">Profil Saya</a>
             <a href="{{ route('tentang') }}">Tentang</a>
             <button id="btnToggle">🌙 Dark Mode</button>
         </div>
     </nav>
 
     <div class="container">
+        @if(session('success'))
+            <div style="background:#27ae60;color:white;padding:14px 20px;border-radius:8px;margin-bottom:16px;font-weight:600;">
+                {{ session('success') }}
+            </div>
+        @endif
         @yield('content')
     </div>
 

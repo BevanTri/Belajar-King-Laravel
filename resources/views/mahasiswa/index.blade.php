@@ -1,11 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Profil Mahasiswa')
+@section('title', 'Daftar Mahasiswa')
 
 @section('content')
     <div class="card">
-        <h2>Daftar Mahasiswa</h2>
-        <p style="color:#888;margin-bottom:16px;">Total data: <strong>{{ $total }}</strong> mahasiswa</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+            <h2 style="margin:0;border:none;padding:0;">Daftar Mahasiswa</h2>
+            <a href="{{ route('mahasiswa.create') }}" style="background:#21B0A7;color:white;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.9rem;">+ Tambah Mahasiswa</a>
+        </div>
 
         <table style="width:100%;border-collapse:collapse;">
             <thead>
@@ -15,13 +17,14 @@
                     <th style="padding:10px 12px;text-align:left;">Prodi</th>
                     <th style="padding:10px 12px;text-align:left;">Angkatan</th>
                     <th style="padding:10px 12px;text-align:left;">IPK</th>
+                    <th style="padding:10px 12px;text-align:center;">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($mahasiswas as $mhs)
                     <tr style="border-bottom:1px solid #e0e0e0;">
                         <td style="padding:10px 12px;">
-                            <a href="{{ route('profil.detail', $mhs->id) }}" style="font-weight:600;">{{ $mhs->nama }}</a>
+                            <a href="{{ route('mahasiswa.show', $mhs->id) }}" style="font-weight:600;">{{ $mhs->nama }}</a>
                         </td>
                         <td style="padding:10px 12px;">{{ $mhs->nim }}</td>
                         <td style="padding:10px 12px;">{{ $mhs->prodi }}</td>
@@ -33,10 +36,18 @@
                                 <span class="badge badge-memuaskan">{{ number_format($mhs->ipk, 2) }}</span>
                             @endif
                         </td>
+                        <td style="padding:10px 12px;text-align:center;white-space:nowrap;">
+                            <a href="{{ route('mahasiswa.edit', $mhs->id) }}" style="background:#065A82;color:white;padding:5px 14px;border-radius:6px;text-decoration:none;font-size:0.8rem;display:inline-block;margin-right:4px;">Edit</a>
+                            <form action="{{ route('mahasiswa.destroy', $mhs->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus {{ $mhs->nama }}?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" style="background:#c0392b;color:white;padding:5px 14px;border:none;border-radius:6px;font-size:0.8rem;cursor:pointer;">Hapus</button>
+                            </form>
+                        </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" style="padding:20px;text-align:center;color:#888;">Belum ada data mahasiswa.</td>
+                        <td colspan="6" style="padding:20px;text-align:center;color:#888;">Belum ada data mahasiswa.</td>
                     </tr>
                 @endforelse
             </tbody>
