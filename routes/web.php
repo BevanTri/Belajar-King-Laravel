@@ -6,7 +6,7 @@ use App\Http\Controllers\TentangController;
 use App\Http\Controllers\ProfileController;
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', [ProfilController::class, 'index']);
+    Route::get('/', [ProfilController::class, 'index'])->name('dashboard');
 
     Route::resource('mahasiswa', ProfilController::class);
 

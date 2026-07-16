@@ -82,6 +82,7 @@
             </div>
         @endif
         @yield('content')
+        {{ $slot ?? '' }}
     </div>
 
     <footer>
