@@ -19,6 +19,7 @@
         <p><span class="info-label">IPK:</span> {{ number_format($mahasiswa->ipk, 2) }}</p>
         <p><span class="info-label">Email:</span> {{ $mahasiswa->email ?? '-' }}</p>
         <p><span class="info-label">GitHub:</span> <a href="{{ $mahasiswa->github }}">{{ $mahasiswa->github ?? '-' }}</a></p>
+        <p><span class="info-label">Ditambahkan oleh:</span> {{ $mahasiswa->user->name ?? '—' }}</p>
         <p style="margin-top:12px;">{{ $mahasiswa->bio ?? '-' }}</p>
     </div>
 

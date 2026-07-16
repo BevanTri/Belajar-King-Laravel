@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ProfilController extends Controller
 {
     public function index()
     {
-        $mahasiswas = Mahasiswa::orderByRaw('CAST(nim AS INTEGER)')->get();
+        $mahasiswas = Mahasiswa::with('user')->orderByRaw('CAST(nim AS INTEGER)')->get();
         return view('mahasiswa.index', compact('mahasiswas'));
     }
 
@@ -31,6 +32,8 @@ class ProfilController extends Controller
             'bio'      => 'nullable|max:500',
         ]);
 
+        $validated['user_id'] = auth()->id();
+
         Mahasiswa::create($validated);
 
         return redirect()->route('mahasiswa.index')
@@ -39,19 +42,24 @@ class ProfilController extends Controller
 
     public function show($id)
     {
-        $mahasiswa = Mahasiswa::findOrFail($id);
+        $mahasiswa = Mahasiswa::with('user')->findOrFail($id);
         return view('mahasiswa.show', compact('mahasiswa'));
     }
 
     public function edit($id)
     {
         $mahasiswa = Mahasiswa::findOrFail($id);
+
+        Gate::authorize('update', $mahasiswa);
+
         return view('mahasiswa.edit', compact('mahasiswa'));
     }
 
     public function update(Request $request, $id)
     {
         $mahasiswa = Mahasiswa::findOrFail($id);
+
+        Gate::authorize('update', $mahasiswa);
 
         $validated = $request->validate([
             'nama'     => 'required|max:255',
@@ -73,6 +81,9 @@ class ProfilController extends Controller
     public function destroy($id)
     {
         $mahasiswa = Mahasiswa::findOrFail($id);
+
+        Gate::authorize('delete', $mahasiswa);
+
         $mahasiswa->delete();
 
         return redirect()->route('mahasiswa.index')
