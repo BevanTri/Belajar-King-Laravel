@@ -20,8 +20,13 @@
         a { color: #065A82; }
         a:hover { text-decoration: none; }
 
-        #btnToggle { padding: 8px 18px; border: 2px solid white; background: transparent; color: white; border-radius: 20px; cursor: pointer; font-size: 14px; transition: background 0.2s; }
-        #btnToggle:hover { background: rgba(255,255,255,0.1); }
+        .switch-wrap { display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none; }
+        .switch-track { width:42px; height:22px; background:#555; border-radius:11px; position:relative; transition:0.2s; flex-shrink:0; }
+        .switch-track::after { content:''; width:18px; height:18px; background:white; border-radius:50%; position:absolute; top:2px; left:2px; transition:0.2s; }
+        .switch-input { display:none; }
+        .switch-input:checked + .switch-track { background:#21B0A7; }
+        .switch-input:checked + .switch-track::after { left:22px; }
+        .switch-label { font-size:0.85rem; color:white; font-weight:600; }
 
         .card { background-color: white; padding: 28px; margin-bottom: 20px; border-radius: 12px; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .card h2 { margin-bottom: 16px; color: #065A82; font-size: 1.4rem; border-bottom: 2px solid #21B0A7; padding-bottom: 10px; }
@@ -39,6 +44,8 @@
         body.dark { background-color: #12121e; color: #e0e0e0; }
         body.dark .navbar { background-color: #0a1628; }
         body.dark .card { background-color: #1a1a2e; border-color: #2a2a4a; }
+        body.dark input:read-only { background-color: #0d0d1a !important; color: #888; border-color: #2a2a4a; }
+        body.dark div[style*="background:#fff3cd"] { background-color: #2a2000 !important; border-color: #665500 !important; color: #ffd700 !important; }
         body.dark .card h2 { color: #88c0d0; border-bottom-color: #21B0A7; }
         body.dark .hero-card { background: #0f2844; }
         body.dark .skill-tag { background: #1a4a6e; }
@@ -46,11 +53,13 @@
 
         body.dark input, body.dark textarea { background: #1a1a2e; color: #e0e0e0; border-color: #2a2a4a; }
         body.dark input:focus, body.dark textarea:focus { outline-color: #88c0d0; }
+        body.dark .switch-track { background: #0a1628; }
+        body.dark .switch-input:checked + .switch-track { background: #21B0A7; }
 
         @media (max-width: 480px) {
             .navbar { flex-direction: column; text-align: center; }
             .nav-links { flex-direction: column; width: 100%; }
-            .navbar a, #btnToggle { width: 100%; text-align: center; }
+            .navbar a, .switch-wrap, form { width: 100%; text-align: center; justify-content: center; }
         }
     </style>
     @stack('styles')
@@ -59,10 +68,22 @@
     <nav class="navbar">
         <span>Pemrograman Web – UNTIRTA</span>
         <div class="nav-links">
-            <a href="{{ route('mahasiswa.index') }}">Daftar Mahasiswa</a>
-            <a href="{{ route('tentang') }}">Tentang</a>
             @auth
+                @if(Auth::user()->is_admin)
+                    <a href="{{ route('mahasiswa.index') }}">Daftar Mahasiswa</a>
+                @else
+                    @php $myMhs = Auth::user()->mahasiswa; @endphp
+                    @if($myMhs)
+                        <a href="{{ route('mahasiswa.show', $myMhs->id) }}">Profil Saya</a>
+                    @endif
+                @endif
+                <a href="{{ route('tentang') }}">Tentang</a>
                 <span style="color:white;font-size:0.9rem;">Halo, {{ Auth::user()->name }}!</span>
+                <label class="switch-wrap">
+                    <input type="checkbox" class="switch-input" id="darkSwitch">
+                    <span class="switch-track"></span>
+                    <span class="switch-label">Dark</span>
+                </label>
                 <form method="POST" action="{{ route('logout') }}" style="display:inline;">
                     @csrf
                     <button type="submit" style="background:transparent;color:#21B0A7;border:2px solid #21B0A7;padding:6px 16px;border-radius:20px;cursor:pointer;font-weight:600;font-size:0.85rem;">Logout</button>
@@ -70,8 +91,12 @@
             @else
                 <a href="{{ route('login') }}" style="background:#21B0A7;color:white;padding:6px 18px;border-radius:20px;text-decoration:none;font-weight:600;font-size:0.85rem;">Login</a>
                 <a href="{{ route('register') }}" style="background:transparent;color:white;border:2px solid white;padding:6px 18px;border-radius:20px;text-decoration:none;font-weight:600;font-size:0.85rem;">Register</a>
+                <label class="switch-wrap">
+                    <input type="checkbox" class="switch-input" id="darkSwitch">
+                    <span class="switch-track"></span>
+                    <span class="switch-label">Dark</span>
+                </label>
             @endauth
-            <button id="btnToggle">🌙 Dark Mode</button>
         </div>
     </nav>
 
@@ -90,24 +115,26 @@
     </footer>
 
     <script>
-        const btnToggle = document.querySelector("#btnToggle");
+        const darkSwitch = document.querySelector("#darkSwitch");
         const body = document.body;
 
         if (localStorage.getItem("darkMode") === "true") {
             body.classList.add("dark");
-            btnToggle.textContent = "☀️ Light Mode";
+            darkSwitch.checked = true;
         }
 
-        btnToggle.addEventListener("click", () => {
-            body.classList.toggle("dark");
-            const isDark = body.classList.contains("dark");
+        function updateLabel() {
+            document.querySelectorAll(".switch-label").forEach(el => el.textContent = darkSwitch.checked ? "Dark" : "Light");
+        }
+
+        darkSwitch.addEventListener("change", () => {
+            const isDark = darkSwitch.checked;
+            body.classList.toggle("dark", isDark);
             localStorage.setItem("darkMode", isDark);
-            if (body.classList.contains("dark")) {
-                btnToggle.textContent = "☀️ Light Mode";
-            } else {
-                btnToggle.textContent = "🌙 Dark Mode";
-            }
+            updateLabel();
         });
+
+        updateLabel();
     </script>
 </body>
 </html>

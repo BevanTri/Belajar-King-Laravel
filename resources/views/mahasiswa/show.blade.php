@@ -23,7 +23,12 @@
         <p style="margin-top:12px;">{{ $mahasiswa->bio ?? '-' }}</p>
     </div>
 
-    <div style="text-align:center;margin-top:16px;">
-        <a href="{{ route('mahasiswa.index') }}" style="color:#065A82;">&larr; Kembali ke daftar</a>
+    <div style="text-align:center;margin-top:16px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+        @can('update', $mahasiswa)
+            <a href="{{ route('mahasiswa.edit', $mahasiswa->id) }}" style="background:#065A82;color:white;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.9rem;">Edit Profil</a>
+        @endcan
+        @if(auth()->user()?->is_admin)
+            <a href="{{ route('mahasiswa.index') }}" style="color:#065A82;padding:10px 24px;">&larr; Kembali ke daftar</a>
+        @endif
     </div>
 @endsection

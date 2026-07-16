@@ -22,11 +22,27 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+    public function mahasiswa()
+    {
+        return $this->hasOne(Mahasiswa::class);
+    }
+
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::saved(function (User $user) {
+            if ($user->wasChanged('email')) {
+                Mahasiswa::where('user_id', $user->id)
+                    ->where('email', '!=', $user->email)
+                    ->update(['email' => $user->email]);
+            }
+        });
     }
 }

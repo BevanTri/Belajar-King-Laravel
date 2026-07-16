@@ -13,6 +13,16 @@
             @csrf
             @method('PUT')
 
+            @php
+                $isAdmin = auth()->user()->is_admin ?? false;
+            @endphp
+
+            @unless($isAdmin)
+                <div style="background:#fff3cd;border:1px solid #ffc107;color:#856404;padding:10px 14px;border-radius:8px;margin-bottom:16px;font-size:0.9rem;">
+                    NIM, Program Studi, Angkatan, dan IPK hanya bisa diubah oleh admin.
+                </div>
+            @endunless
+
             <div style="margin-bottom:16px;">
                 <label style="font-weight:600;display:block;margin-bottom:4px;">Nama Lengkap <span style="color:red;">*</span></label>
                 <input type="text" name="nama" value="{{ old('nama', $mahasiswa->nama) }}" style="width:100%;padding:10px 14px;border:1px solid #ccc;border-radius:8px;font-size:1rem;" required>
@@ -21,25 +31,25 @@
 
             <div style="margin-bottom:16px;">
                 <label style="font-weight:600;display:block;margin-bottom:4px;">NIM <span style="color:red;">*</span></label>
-                <input type="text" name="nim" value="{{ old('nim', $mahasiswa->nim) }}" style="width:100%;padding:10px 14px;border:1px solid #ccc;border-radius:8px;font-size:1rem;" required>
+                <input type="text" name="nim" value="{{ old('nim', $mahasiswa->nim) }}" style="width:100%;padding:10px 14px;border:1px solid #ccc;border-radius:8px;font-size:1rem;{{ $isAdmin ? '' : 'background:#f0f0f0;cursor:not-allowed;' }}" {{ $isAdmin ? 'required' : 'readonly' }}>
                 @error('nim') <span style="color:red;font-size:0.85rem;">{{ $message }}</span> @enderror
             </div>
 
             <div style="margin-bottom:16px;">
                 <label style="font-weight:600;display:block;margin-bottom:4px;">Program Studi <span style="color:red;">*</span></label>
-                <input type="text" name="prodi" value="{{ old('prodi', $mahasiswa->prodi) }}" style="width:100%;padding:10px 14px;border:1px solid #ccc;border-radius:8px;font-size:1rem;" required>
+                <input type="text" name="prodi" value="{{ old('prodi', $mahasiswa->prodi) }}" style="width:100%;padding:10px 14px;border:1px solid #ccc;border-radius:8px;font-size:1rem;{{ $isAdmin ? '' : 'background:#f0f0f0;cursor:not-allowed;' }}" {{ $isAdmin ? 'required' : 'readonly' }}>
                 @error('prodi') <span style="color:red;font-size:0.85rem;">{{ $message }}</span> @enderror
             </div>
 
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
                 <div>
                     <label style="font-weight:600;display:block;margin-bottom:4px;">Angkatan <span style="color:red;">*</span></label>
-                    <input type="number" name="angkatan" value="{{ old('angkatan', $mahasiswa->angkatan) }}" style="width:100%;padding:10px 14px;border:1px solid #ccc;border-radius:8px;font-size:1rem;" required>
+                    <input type="number" name="angkatan" value="{{ old('angkatan', $mahasiswa->angkatan) }}" style="width:100%;padding:10px 14px;border:1px solid #ccc;border-radius:8px;font-size:1rem;{{ $isAdmin ? '' : 'background:#f0f0f0;cursor:not-allowed;' }}" {{ $isAdmin ? 'required' : 'readonly' }}>
                     @error('angkatan') <span style="color:red;font-size:0.85rem;">{{ $message }}</span> @enderror
                 </div>
                 <div>
                     <label style="font-weight:600;display:block;margin-bottom:4px;">IPK <span style="color:red;">*</span></label>
-                    <input type="number" step="0.01" name="ipk" value="{{ old('ipk', $mahasiswa->ipk) }}" style="width:100%;padding:10px 14px;border:1px solid #ccc;border-radius:8px;font-size:1rem;" required>
+                    <input type="number" step="0.01" name="ipk" value="{{ old('ipk', $mahasiswa->ipk) }}" style="width:100%;padding:10px 14px;border:1px solid #ccc;border-radius:8px;font-size:1rem;{{ $isAdmin ? '' : 'background:#f0f0f0;cursor:not-allowed;' }}" {{ $isAdmin ? 'required' : 'readonly' }}>
                     @error('ipk') <span style="color:red;font-size:0.85rem;">{{ $message }}</span> @enderror
                 </div>
             </div>

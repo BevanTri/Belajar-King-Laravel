@@ -6,7 +6,9 @@
     <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
             <h2 style="margin:0;border:none;padding:0;">Daftar Mahasiswa</h2>
-            <a href="{{ route('mahasiswa.create') }}" style="background:#21B0A7;color:white;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.9rem;">+ Tambah Mahasiswa</a>
+            @if(auth()->user()?->is_admin)
+                <a href="{{ route('mahasiswa.create') }}" style="background:#21B0A7;color:white;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.9rem;">+ Tambah Mahasiswa</a>
+            @endif
         </div>
 
         <table style="width:100%;border-collapse:collapse;">
