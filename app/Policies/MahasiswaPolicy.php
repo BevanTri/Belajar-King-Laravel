@@ -9,11 +9,11 @@ class MahasiswaPolicy
 {
     public function update(User $user, Mahasiswa $mahasiswa): bool
     {
-        return $user->id === $mahasiswa->user_id;
+        return $user->is_admin || $user->id === $mahasiswa->user_id;
     }
 
     public function delete(User $user, Mahasiswa $mahasiswa): bool
     {
-        return $user->id === $mahasiswa->user_id;
+        return $user->is_admin || $user->id === $mahasiswa->user_id;
     }
 }
